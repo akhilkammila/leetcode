@@ -1,6 +1,17 @@
+/*
+https://leetcode.com/problems/minimum-reverse-operations/description/
+This problem is pretty hard
+Uses an uncommon idea: we have a graph of size n^2, but after we visit a node, we never go back to it
+Because of how the problem is set up, if we can split up the unvisited vertices by their parity. Then,
+the vertices that a vertex will go to are all contiguous
+
+Could make leetcode post on this in the future
+*/
+
 #include <vector>
 #include <iostream>
 #include <queue>
+#include <set>
 using namespace std;
 
 #ifdef LOCAL
@@ -12,7 +23,26 @@ using namespace std;
 
 class Solution {
 public:
+    void addNeighbors(queue<int>& q, set<int>& neighbors, int l, int r) {
+        set<int>::iterator begin_it = neighbors.lower_bound(l);
+        set<int>::iterator end_it = neighbors.upper_bound(r);
+        while(begin_it != end_it) {
+            int val = *begin_it;
+            q.push(val);
+            begin_it = neighbors.erase(begin_it);
+        }
+    }
+
     void bfs(int n, int p, vector<bool>& banned, int k, vector<int>& distances) {
+        // Keep track of visited and unvisited nodes
+        set<int> odds, evens;
+        for(int i = 0; i < n; i++) {
+            if (banned[i]) continue;
+            if (i%2 == 0) evens.insert(i);
+            else odds.insert(i);
+        }
+
+        // Initialize queue
         queue<int> q;
         q.push(p);
         int j = k-1;
@@ -32,10 +62,11 @@ public:
                 // Add neighbors
                 int l = abs(index - j);
                 int r = min(index + j, 2*n - j - index - 2);
-                for(int j = l; j <= r; j += 2) {
-                    if (distances[j] != -1 || banned[j]) continue;
-                    q.push(j);
-                }
+                
+                // Add neighbors by looking at the set of possible neighbors
+                // in the range [l, r]
+                if (l%2 == 0) addNeighbors(q, evens, l, r);
+                else addNeighbors(q, odds, l, r);
             }
             dist++;
         }
