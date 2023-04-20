@@ -1,3 +1,11 @@
+/*
+https://leetcode.com/problems/strong-password-checker/
+
+Greedy problem solving problem, O(n)
+Idea: only use add if length <6, only use delete if length > 20
+see how many replaces we need, and see how much delete reduces our replace count
+*/
+
 #include <iostream>
 #include <string>
 #include <vector>
