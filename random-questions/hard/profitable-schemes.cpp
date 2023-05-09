@@ -2,13 +2,6 @@
 #include <iostream>
 using namespace std;
 
-#ifdef LOCAL
-#define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
-#include </Users/akhilkammila/Competitive Programming/debug.h>
-#else
-#define DEBUG(...) 47;
-#endif
-
 /*
 State: c crimes considered, m members used, AT LEAST p profit obtained
 
